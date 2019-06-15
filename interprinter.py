@@ -3,6 +3,7 @@ class interprinter:
         self.ns = {}
         self.code = []
         self.condition = 0
+        self.infinite = 0
     def interpret_pro(self,code):
         self.code = [code]
         for c in self.code:
@@ -19,7 +20,12 @@ class interprinter:
             print(logic)
             while(self.interpret_login(logic) != True):
                 self.interpret_func(body)
-                
+                self.infinite += 1
+                if self.infinite == 10000:
+                    break;
+            #무한 반복 방지
+            self.infinite == 0
+
         elif div == "print":
             var = subcode[1]
             if var in self.ns:
@@ -44,14 +50,10 @@ class interprinter:
             print("else Enter - execute body")
             self.condition = 0
 
-
-
     def interpret_login(self,subcode):
         op = subcode[0]
-
         ident = self.interpret_expr(subcode[1])
         value = self.interpret_expr(subcode[2])
-        
 
         if op == ">":
             if ident > value:
@@ -68,8 +70,6 @@ class interprinter:
                 return True
             else:
                 return False
-
-            
 
     def interpret_expr(self,subcode):
         if isinstance(subcode,str) and subcode.isdigit():
