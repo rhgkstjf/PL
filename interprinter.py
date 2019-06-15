@@ -1,19 +1,22 @@
 class interprinter:
-    def __init__(self,code,ns):
-        self.ns = ns
-        self.code = code
-
-    def interpret_pro(self):
+    def __init__(self):
+        self.ns = {}
+        self.code = []
+        self.condition = 0
+    def interpret_pro(self,code):
+        self.code = [code]
         for c in self.code:
             self.interpret_func(c)
-        print("final")
-        print(self.ns)
-    
+
+    def interpret_ns(self):
+        return self.ns
+
     def interpret_func(self,subcode):
         div = subcode[0]
         if div == "while":
-            logic = subcode[1]
+            logic = subcode[1][1]
             body = subcode[2]
+            print(logic)
             while(self.interpret_login(logic) != True):
                 self.interpret_func(body)
                 
@@ -21,7 +24,7 @@ class interprinter:
             var = subcode[1]
             if var in self.ns:
                 ans = self.ns[var]
-                print(ans)
+                print("print execute : "+str(ans))
             else:
                 print("value is not define := print")
         elif div == "=":
@@ -34,27 +37,21 @@ class interprinter:
                 body = self.interpret_func(subcode[2])
                 print("if - execute")
             else:
+                self.condition = 1
                 print("if - not execute")
-        elif div == "else":
+        elif div == "else" and self.condition == 1:
             body = self.interpret_func(subcode[1])
             print("else Enter - execute body")
+            self.condition = 0
 
 
 
     def interpret_login(self,subcode):
         op = subcode[0]
-        
-        ident = 0
-        value = 0
-        if isinstance(subcode[1],int):
-            ident = subcode[1]
-        else:
-            ident = self.ns[subcode[1]]
 
-        if isinstance(subcode[2],int):
-            value = subcode[2]
-        else:
-            value = self.ns[subcode[2]]
+        ident = self.interpret_expr(subcode[1])
+        value = self.interpret_expr(subcode[2])
+        
 
         if op == ">":
             if ident > value:
