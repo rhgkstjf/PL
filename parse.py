@@ -207,18 +207,24 @@ class lex_basic:
             sub = self.declaration()
             return sub
         elif self.nextToken == 80:
-            exp = self.expr()
-            if self.nextToken == 65:
-                self.lex()
-            else:
-                print("while - is not ':'")
-            pro = self.pro()
-            if self.nextToken == 81:
-                self.lex()
-                sub = ["while",exp,pro,"finish"]
-                return sub
-            else:
-                print("while - error is not")
+            self.lex()
+            if self.nextToken == 25:
+                exp = self.expr()
+                if self.nextToken == 26:
+                    self.lex()
+                    op = ["(",exp,")"]
+                    if self.nextToken == 65:
+                        self.lex()
+                    else:
+                        print("while - is not ':'")
+                    pro = self.pro()
+                    if self.nextToken == 81:
+                        self.lex()
+                        result = op
+                        sub = ["while",result,pro,"finish"]
+                        return sub
+                    else:
+                        print("while - error is not")
         elif self.nextToken == 30:
             self.lex()
             #sub = ["{",self.pro()]
@@ -316,15 +322,14 @@ class lex_basic:
                 sub = ["equals",v,self.expr()]
                 return sub
             else:
-                #print("expr return value : " + str(v))
                 return v
         else:
             print("Grammer - error")
 
-p = lex_basic("while k equals 0 : a= a + 1 finish ;  k = k + 1; a = k; if(k equals 0) a = a +1 finish; else k = k+1 finish; print a;")
-k = p.start()
-k = p.return_inter()
-print(k)
+#p = lex_basic("while k equals 0 : a= a + 1 finish ;  k = k + 1; a = k; if(k equals 0) a = a +1 finish; else k = k+1 finish; print a;")
+#k = p.start()
+#k = p.return_inter()
+#print(k)
 #print(k[0])
 #print(k[1])
 #print(k[2])
