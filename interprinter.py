@@ -5,7 +5,6 @@ class interprinter:
 
     def interpret_pro(self):
         for c in self.code:
-            print(c)
             self.interpret_func(c)
         print("final")
         print(self.ns)
@@ -30,14 +29,14 @@ class interprinter:
             expr = self.interpret_expr(subcode[2])
             self.ns[var] = expr
         elif div == "if":
-            logic = subcode[1][1]
+            logic = self.interpret_login(subcode[1][1])
             if logic == True:
-                body = subcode[2]
+                body = self.interpret_func(subcode[2])
                 print("if - execute")
             else:
                 print("if - not execute")
         elif div == "else":
-            body = subcode[1]
+            body = self.interpret_func(subcode[1])
             print("else Enter - execute body")
 
 
@@ -53,7 +52,6 @@ class interprinter:
             ident = self.ns[subcode[1]]
 
         if isinstance(subcode[2],int):
-            
             value = subcode[2]
         else:
             value = self.ns[subcode[2]]
